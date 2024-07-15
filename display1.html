@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        div {
+            background-color: red;
+            display: inline-block;
+            padding: 45px;
+            margin: 10px;
+            width: 344px;
+            /* top margin and padding & width will not work in inline element */
+            /* in that case us display: inline-block; */
+        }
+
+        .box2{
+            /* display: none; */
+            visibility: hidden;
+        }
+        /*display: none; will completely remove element along with spaces*/
+        /*but visibility: hidden; will make the element invisible but the space it occupied will remain there*/
+    </style>
+</head>
+
+<body>
+    <div class="box1">
+        i'm a box
+    </div>
+    <div class="box2">another box</div>
+    <span>This is a</span>
+    <span> inline</span>
+</body>
+
+</html>
