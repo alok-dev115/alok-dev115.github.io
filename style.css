@@ -47,6 +47,23 @@ ul{
     border: 3px solid red;
 }
 
+.button{
+    width: 100px;
+    margin: auto;
+    text-align: center;
+    margin-top: 40px;
+    border: 2px solid white ;
+    border-radius: 7px;
+    padding: 7px;
+    color: rgb(0, 140, 255);
+    background-color: rgb(172, 244, 243);
+    cursor: pointer;
+}
+
+.button:hover{
+    box-shadow: 3px 5px 10px rgb(172, 244, 243);
+}
+
 img{
     max-width: 100%;
     margin: auto;
