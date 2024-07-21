@@ -42,13 +42,14 @@ ul{
     width: 100px;
     margin: auto;
     text-align: center;
-    margin-top: 40px;
     border: 2px solid white ;
     border-radius: 7px;
     padding: 7px;
     color: rgb(0, 140, 255);
     background-color: rgb(172, 244, 243);
     cursor: pointer;
+    /* position: relative;
+    top: 20px; */
 }
 
 .button:hover{
@@ -105,6 +106,7 @@ p{
     margin: 10px;
     border-radius: 10px;
     padding-top: 10px;
+    overflow: auto;
 }
 .foot p{
     text-align: center;
@@ -134,4 +136,9 @@ p{
         margin: 10px;
         height: 350px;
     }
+
+    /* .button{
+        position: relative;
+        top: 15px;
+    } */
 }
