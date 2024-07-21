@@ -1,0 +1,118 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    background-color: antiquewhite;
+}
+ul li{
+    display: inline;
+    list-style: none;
+    padding: 10px;
+    margin: 7px;
+    /* background-color: blueviolet; */
+    /* border: 2px solid lightcyan; */
+    /* border-radius: 7px; */
+    cursor: pointer;
+    /* list-style-position: inside; */
+}
+li:hover{
+    background-color: rgb(77, 1, 148);
+    /* box-shadow: 5px 5px 10px aqua; */
+}
+ul{
+    background-color: blueviolet;
+    color: white;
+    padding: 10px;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+}
+
+.bg1{
+    background-color: lightgreen;
+    height: 90vh;
+    margin: 10px;
+    display: flex;
+    border-radius: 7px;
+}
+
+.bg1 .box{
+    height: 370px;
+    background-color: lightpink;
+    width: 320px;
+    margin: auto;
+    border-radius: 11px;
+    padding: 10px;
+    border: 3px solid red;
+}
+
+img{
+    max-width: 100%;
+    margin: auto;
+    border-radius: 7px;
+    /* margin: 7px; */
+}
+
+p{
+    margin: 10px;
+}
+
+.text{
+    width: 90vw;
+    margin: auto;
+    height: 100px;
+    border: 3px solid red;
+    border-radius: 30px;
+    box-shadow: 3px 3px 10px magenta;
+    overflow: auto;
+    background-color: white;
+    /* text-overflow: ellipsis; */
+
+}
+
+.text p{
+    text-align: center;
+    font-size: 70px;
+    font-family: french script mt;
+
+}
+.text p:hover{
+    text-shadow: 3px 3px 10px green;
+}
+
+.foot{
+    height: 60px;
+    background-color: white;
+    margin: 10px;
+    border-radius: 10px;
+    padding-top: 10px;
+}
+.foot p{
+    text-align: center;
+    font-family: monotype corsiva;
+    font-size: 20px;
+}
+
+.icon img{
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 0px;
+    right: 2px;
+    margin:  0 5px 10px 0;
+    cursor: pointer;
+    box-shadow: 3px 7px 10px black;
+}
+
+
+@media only screen and (max-width: 750px){
+    .bg1{
+        display: block;
+    }
+    .bg1 .box{
+        margin: 10px;
+        height: 350px;
+    }
+}
