@@ -64,6 +64,7 @@ ul{
     border-radius: 11px;
     padding: 10px;
     border: 3px solid red;
+    overflow: auto;
 }
 
 img{
@@ -73,8 +74,8 @@ img{
     /* margin: 7px; */
 }
 
-p{
-    margin: 10px;
+.box p{
+    margin: 10px 10px 0 10px;
 }
 
 .text{
@@ -136,9 +137,11 @@ p{
         margin: 10px;
         height: 350px;
     }
+}
 
-    /* .button{
+@media only screen and (min-width: 750px){
+    .button{
         position: relative;
-        top: 15px;
-    } */
+        top: 20px;
+    }
 }
