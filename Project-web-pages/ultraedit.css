@@ -8,6 +8,7 @@ ul {
     list-style: none;
     grid-area: nav;
     cursor: pointer;
+    flex-wrap: wrap;
 }
 
 .icon img{
@@ -56,6 +57,7 @@ h3{
 .header{
     display: flex;
     margin-top: 50px;
+    flex-wrap: wrap;
 }
 .header b{
     font-size: 25px;
