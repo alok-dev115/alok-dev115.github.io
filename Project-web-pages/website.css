@@ -70,6 +70,7 @@ nav{
     background-color: white;
     display: flex;
     box-shadow: 5px 5px 10px black;
+    min-width: 300px;
 
 }
 .search span{
