@@ -2,18 +2,18 @@
     margin: 0;
     padding: 0;
 }
+body{
+    display: grid;
+}
 .logo img{
     width: 100px;
     cursor: pointer;
 }
 .one{
     background-color: rgb(65, 213, 164);
-    min-height: 50vh;/*make auto*/
+    min-height: 60vh;/*make auto*/
 }
 
-.three{
-    height: 50vh;/*make auto*/
-}
 header{
     background-color: rgb(65, 213, 164);
     
@@ -70,6 +70,7 @@ nav{
     background-color: white;
     display: flex;
     box-shadow: 5px 5px 10px black;
+
 }
 .search span{
     padding: 5px;
@@ -78,7 +79,7 @@ nav{
 
 }
 .s-button{
-    background-color: rgb(166, 112, 217);
+    /* background-color: rgb(166, 112, 217); */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -87,6 +88,7 @@ nav{
     width: 70px;
     border-radius: 30px;
     cursor: pointer;
+    color: rgb(220, 118, 241);
 }
 .two{
     background-color: rgb(66, 228, 201);
@@ -106,12 +108,12 @@ nav{
     background-color: white;
     border-radius: 20px;
     margin: 5px;
-    position: relative;
-    top: -70px;
     box-shadow: 5px 5px 10px black;
     display: grid;
     justify-content: center;
     padding: 20px;
+    position: relative;
+    top: -5%;
 
 }
 .card1{
@@ -147,3 +149,84 @@ nav{
     border-radius: 20px;
     cursor: pointer;
 }
+
+.three{
+    /* height: 60vh; */
+    width: 100vw;
+    background-color: cyan;
+}
+
+.menu2{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-bottom: 1px solid grey;
+    width: 60vw;
+    margin: auto;
+}
+.item2{
+    margin: 10px;
+}
+.three h1{
+    text-align: center;
+    margin: 15px;
+}
+.item2:first-child{
+    color: blue;
+}
+
+
+.container {
+    border: 2px solid rgb(214, 229, 242);
+    width: 300px;
+    margin: 10px;
+    height:400px;
+    border-radius: 19px;
+    background-color: aliceblue;
+    padding: 10px;
+  }
+
+  .container .img {
+    /* background-size: 45%; */
+    /* margin: 5px; */
+    border-radius: 8px;
+    max-width: 100%;
+
+    /* max-width: 100%; */
+    /* margin: auto; */
+  }
+
+  .container .text {
+    border: 2px solid rgb(236, 219, 219);
+    border-radius: 10px;
+    padding: 5px;
+    margin-bottom: 20px;
+    display: inline-block;
+    /* background-col; */
+  }
+
+  .container h2 {
+    margin: auto;
+  }
+  .container  p{
+    margin: auto;
+  }
+  .container .box{
+    color: rgb(117, 216, 231);
+    border: 3px solid aliceblue;
+    display: inline-block;
+    padding: 5px;
+    border-radius: 7px;
+    background-color: rgb(222, 238, 252);
+    cursor: pointer;
+    margin: auto;
+  }
+  .container .box:hover{
+    background-color: rgb(76, 207, 227);
+    color: aliceblue;
+  }
+  .cont{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
