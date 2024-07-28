@@ -222,6 +222,7 @@ nav{
     background-color: rgb(222, 238, 252);
     cursor: pointer;
     margin: auto;
+    transition: all 0.5s ease 0s;
   }
   .container .box:hover{
     background-color: rgb(76, 207, 227);
