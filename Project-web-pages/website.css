@@ -153,6 +153,7 @@ nav{
 .three{
     /* height: 60vh; */
     width: 100vw;
+    margin: auto;
     background-color: white;
 }
 
