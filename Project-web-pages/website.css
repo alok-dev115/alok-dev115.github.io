@@ -227,6 +227,7 @@ nav{
   .container .box:hover{
     background-color: rgb(76, 207, 227);
     color: aliceblue;
+    box-shadow: 3px 3px 10px cyan;
   }
   .cont{
     display: flex;
