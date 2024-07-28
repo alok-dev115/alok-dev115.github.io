@@ -124,7 +124,7 @@ nav{
 .card2{
     /* grid-area: g-card; */
     background-color: greenyellow;
-    width: 400px;
+    width: 380px;
     background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4)), url('images/mt.jpg');
     height: 300px;
     background-size: cover;
