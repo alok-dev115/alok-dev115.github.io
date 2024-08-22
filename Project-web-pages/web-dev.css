@@ -1,0 +1,248 @@
+*{
+    padding: 0;
+    margin: 0;
+    font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;;
+}
+body{
+    background-color: black;
+
+}
+html{
+    scroll-behavior: smooth;
+}
+.main-1{
+    height: 100vh;
+    /* width: 100vw; */
+    /* border: 2px solid red; */
+    /* object-fit: fill; */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('images/mt.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;   
+    padding: 10px;
+    position: relative;
+    background-attachment: fixed;
+    min-width: 400px;
+}
+
+.nav{
+    /* width: 100vw; */
+    /* border: 2px solid red; */
+    border-radius: 10px;
+    padding: 7px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    /* scroll-behavior: smooth; */
+    /* margin: ; */
+}
+.nav a:link, .nav a:active, .nav a:visited{
+    text-decoration: none;
+    color: white;
+    /* scroll-behavior: smooth; */
+}
+.left h1, .right img{
+    transition: all 0.1s linear 0s;
+}
+
+.mid{
+    margin: auto;
+}
+.mid ul{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+    list-style-type: none;
+    gap: 40px;
+}
+.mid li{
+    /* margin: 10px; */
+    transition: all 0.1s linear 0s;
+}
+
+
+ .right img{
+    width: 50px;
+ }
+
+ .big-text h1{
+    /* position: absolute;
+    top: 40%; */
+    text-align: center;
+    font-size: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    height: 40vh;
+ }
+ .big-text p{
+    /* width: 300px; */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    font-size: 20px;
+    width: 50%;
+    margin: auto;
+
+ }
+
+ .btn span{
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(46, 45, 45);
+    color: white;
+    /* border: none; */
+    margin: auto;
+    margin: 20px;
+    cursor: pointer;
+    transition: all 0.1s linear 0s;
+ }
+ .btn{
+    /* width: 100vw; */
+    display: flex;
+    justify-content: center;
+    gap: 15%;
+    /* margin-right: auto; */
+ }
+
+
+.main-2{
+    height: 100vh;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("images/space-lake.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    margin-top: 10px;
+    padding: 30px;
+    /* display: flex;
+    flex-direction: column;
+    gap: 50px; */
+    /* flex-wrap: wrap; */
+    color: white;
+    /* position: fixed;
+    bottom: 0px; */
+
+    display: grid;
+    grid-template-areas: 'one two'
+                        'three four'
+                        'five six'
+                        'seven eight'
+                        'nine ten';
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    text-align: center;
+    min-width: 400px;
+}
+
+/* .m1, .m2, .m3, .m4, .m5{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+
+} */
+
+/* .main-2 h1{
+    align-self: center;
+} */
+
+.main-2 img{
+    width: 600px;
+    /* width: auto; */
+    min-width: 350px;
+    box-shadow: 5px 5px 10px black;
+    border-radius: 10px;
+}
+
+
+.main-3, .main-4, .main-5{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("images/space-lake.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /* margin-top: 10px; */
+    padding: 30px;
+    height: 100vh;
+    min-width: 400px;
+}
+.main-5{
+    height: 0vh;
+    background-image: none;
+    margin-top: 10px;
+}
+
+
+/* .main-3{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("images/space-mt.webp");
+}
+.main-4{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("images/blue-light.webp");
+}*/
+
+
+.bottom{
+    height: 70vh;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ .mid li:hover, .left h1:hover, .right img:hover{
+    text-shadow: 5px 5px 4px white;
+    opacity: 0.6;
+    box-shadow: 5px 5px 10px white;
+    padding: 10px;
+    border-radius: 7px;
+    cursor: pointer;
+    /* position: relative;
+    top: -10px;
+    left: -10px; */
+}
+ .btn span:hover{
+    background-color: rgb(31, 31, 31);
+    box-shadow: 5px 5px 10px white;
+    opacity: 0.7;
+    transform: scale(1.07);
+ }
+
+ @media only screen and (max-width: 823px){
+    .main-5{
+        height: 0vh;
+        background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("images/space-lake.jpg");
+        margin-top: 0px;
+    }
+    .main-2{
+        grid-template-areas: 'two'
+                            'one'
+                            'three'
+                            'four'
+                            'six'
+                            'five'
+                            'seven'
+                            'eight'
+                            'ten'
+                            'nine';
+        justify-content: center;
+        align-items: center;
+    }
+    .main-2 img{
+        justify-self: center;
+    }
+}
+

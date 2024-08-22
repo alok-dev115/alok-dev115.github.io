@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="images/mt.jpg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .main{
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("images/deer.jpg");
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* position: relative; */
+            overflow: auto;
+        }
+        .login-box{
+            height: 550px;
+            width: 400px;
+            min-width: 350px;
+            /* border: 2px solid red; */
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            /* justify-content: center; */
+            /* align-items: center; */
+            /* margin-top: auto; */
+            background-color: rgb(95, 77, 77);
+            opacity: 0.8;
+            padding: 0;
+            box-shadow: 10px 5px 10px black;
+        }
+        .login{
+            color: white;
+            background-color: grey;
+            margin: auto;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 7px;
+            text-align: center;
+            width: 50px;
+            font-weight: 1000;
+            transition: all 0.1s linear 0s;
+
+        }
+        .login-box input{
+            padding: 15px;
+            margin: 10px;
+            border-radius: 10px;
+            width: 300px;
+            border: none;
+            font-weight:1000;
+
+            
+        }
+        .login-box img{
+            width: 90px;
+            box-shadow: 5px 5px 10px black;
+            border-radius: 10px;
+        }
+        .box{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            top: -100px;
+        }
+        .inp{
+            position: relative;
+            top: 100px;
+        }
+
+        .image img{
+            width: 100%;
+            margin: 0;
+            border-radius: 10px;
+        }
+        input:focus{
+            outline: none;
+        }
+        .login:hover{
+            box-shadow: 5px 5px 10px white;
+            transform: scale(1.07);
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="login-box">
+            <div class="image">
+                <img src="images/deer.jpg" alt="">
+            </div>
+            <div class="box">
+                <img src="images/account_circle_69.png" alt="">
+                <div class="inp">
+                    <input type="text" placeholder="Name"><br>
+                    <input type="text" placeholder="Password">
+                    <div class="login">Login</span>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>
