@@ -23,7 +23,7 @@ html{
     padding: 10px;
     position: relative;
     background-attachment: fixed;
-    min-width: 400px;
+    min-width: 500px;
 }
 
 .nav{
@@ -135,7 +135,7 @@ html{
     gap: 10px;
     justify-content: center;
     text-align: center;
-    min-width: 400px;
+    min-width: 500px;
 }
 
 /* .m1, .m2, .m3, .m4, .m5{
