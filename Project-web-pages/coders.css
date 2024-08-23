@@ -154,7 +154,7 @@ html{
 .main-2 img{
     width: 600px;
     /* width: auto; */
-    min-width: 350px;
+    min-width: 300px;
     box-shadow: 5px 5px 10px black;
     border-radius: 10px;
 }
