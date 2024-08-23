@@ -243,6 +243,7 @@ html{
     }
     .main-2 img{
         justify-self: center;
+        width: 500px;
     }
 }
 
