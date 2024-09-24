@@ -5,6 +5,8 @@
 }
 body{
     background-color: black;
+    width: 100vw;
+    /* overflow: visible; */
 
 }
 html{
@@ -12,18 +14,20 @@ html{
 }
 .main-1{
     height: 100vh;
-    /* width: 100vw; */
+    /* width: 143vw; */
+    /* margin-right: 0px; */
     /* border: 2px solid red; */
     /* object-fit: fill; */
     background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('images/mt.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: fixed;
     color: white;   
     padding: 10px;
     position: relative;
-    background-attachment: fixed;
-    min-width: 500px;
+    min-width: 550px;
+    
 }
 
 .nav{
@@ -110,6 +114,7 @@ html{
 
 .main-2{
     height: 100vh;
+    /* width: 100vw; */
     background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("images/space-lake.jpg");
     background-size: cover;
     background-position: center;
@@ -135,7 +140,7 @@ html{
     gap: 10px;
     justify-content: center;
     text-align: center;
-    min-width: 500px;
+    min-width: 550px;
 }
 
 /* .m1, .m2, .m3, .m4, .m5{
@@ -168,8 +173,8 @@ html{
     background-attachment: fixed;
     /* margin-top: 10px; */
     padding: 30px;
-    height: 100vh;
-    min-width: 500px;
+    height: 70vh;
+    min-width: 550px;
 }
 .main-5{
     height: 0vh;
@@ -187,12 +192,39 @@ html{
 
 
 .bottom{
-    height: 70vh;
+    height: 50vh;
+    padding: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 
+.bottom .one{
+    color: rgb(131, 126, 126);
+    border: 2px solid rgb(177, 14, 222);
+    border-radius: 0px;
+    height: 300px;
+    padding: 20px;
+    margin: 10px;
+    width: 200px;
+    background-color: rgb(31, 32, 33);
 
+}
+.bottom .one ul{
+    list-style-type: none;
+    line-height: 30px;
+}
+ 
 
-
+.bottom li{
+    transition: color 0.1s linear 0s;
+}
+.bottom li:hover{
+    cursor: pointer;
+    color: rgb(48, 39, 39);
+    
+}
 
 
 
@@ -245,5 +277,9 @@ html{
         justify-self: center;
         width: 500px;
     }
+    .bottom{
+        height: 100vh;
+    }
+    
 }
 
