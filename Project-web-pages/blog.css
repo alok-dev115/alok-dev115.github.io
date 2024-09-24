@@ -109,6 +109,8 @@ body{
     width: 300px;
     border: 2px solid rgb(169, 234, 252);
     border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.1s linear 0.1s;
 }
 .card img{
     height: 50%;
@@ -116,7 +118,20 @@ body{
     height: 50%;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
+    transition: all 0.1s linear 0s;
 }
+
+/* .card img:hover{
+    transform: scale(1.5);
+    border-radius: 7px;
+} */
+.card:hover{
+    transform: scale(1.1);
+    border-radius: 7px;
+    background-color: rgb(89, 210, 210);
+    /* box-shadow: 10px 10px 20px white; */
+}
+
 
 
 .card div{
@@ -132,25 +147,98 @@ body{
     padding: 10px;
 }
 
+.post{
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 7px;
+    background-color: rgb(58, 169, 233);
+    border: none;
+    transition: all 0.1s linear 0s;
+}
+
+.content{
+    margin: auto;
+    height: 90vh;
+    width: 50vw;
+    border: 2px solid rgb(194, 209, 80);
+    margin-top: 50px;
+    border-radius: 7px;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile img{
+    width: 45px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.profile{
+    text-decoration: underline;
+    display: flex;
+    align-items: center;
+
+}
+hr{
+    border: 1px solid rgb(255, 255, 255);
+    width: 100%;
+}
 
 
+.image{
+    display: flex;
+    justify-content: center;
+}
+.image img{
+    max-width: 100%;
+    /* margin-top: 30px; */
+    transition: all 0.1s linear 0s;
 
+}
 
+/* .image img:hover{
+    transform: scale(1.2);
+} */
 
+textarea:focus, .post:focus{
+    outline: none
+}
 
+.opt{
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    /* border: 2px solid red; */
+    margin: auto;
+    gap: 40px;
+}
+.opt span{
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px;
+    color: rgb(91, 179, 233);
+    transition: all 0.1s linear 0s;
+    border-radius: 50%;
+}
+.opt span:hover{
+    box-shadow: 1px 1px 20px white;
 
+    transform: scale(1.5);
+}
+/* .post:focus{
+    transform: scale(1.5);
+} */
 
-
-
-
-
- .mid li:hover, .left h1:hover, .right img:hover{
+.mid li:hover, .left h1:hover, .right img:hover, .post:hover{
     text-shadow: 5px 5px 4px white;
     opacity: 0.6;
     box-shadow: 5px 5px 10px white;
     padding: 10px;
     border-radius: 12px;
     cursor: pointer;
+    transform: scale(1.1);
     /* position: relative;
     top: -10px;
     left: -10px; */
@@ -171,5 +259,8 @@ body{
     .text-area h1{
         text-align: center;
         margin-top: 20px;
+    }
+    .content{
+        height: 60vh;
     }
 }
