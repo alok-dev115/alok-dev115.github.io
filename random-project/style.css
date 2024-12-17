@@ -1,0 +1,44 @@
+.container {
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    /* height: 100vh; */
+    gap: 15px;
+}
+
+.box {
+    height: 50px;
+    width: 50px;
+    border: 3px solid magenta;
+    margin: 0.2em;
+    padding: 0.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 1px 1px 10px black;
+
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+button {
+    border: none;
+    padding: 10px;
+    border-radius: 7px;
+    background-color: lightblue;
+    transition: all 0.2s linear 0s;
+}
+
+
+button:hover{
+    box-shadow: 1px 1px 20px rgb(125, 211, 211);
+}
+
+button:focus{
+    opacity: 0.7;
+}
