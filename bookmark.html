@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmarx</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            font-family: UberMove, UberMoveText, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            margin: 50px;
+        }
+
+        h1 {
+            text-decoration: underline dotted rgb(27, 23, 23) 2px;
+            text-align: center;
+        }
+
+        .container {
+            /* display: ; */
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        #name,
+        #url {
+            padding: 10px;
+            margin-top: 10px;
+            outline: none;
+            border: 1px solid rgb(243, 206, 206);
+
+        }
+
+        #add_btn {
+            padding: 8px;
+            width: 80px;
+            border-radius: 10px;
+            /* outline: none; */
+            border: none;
+            transition: all 0.1s linear 0s;
+        }
+
+        #add_btn:hover {
+            background-color: rgb(138, 235, 235);
+            color: white;
+            box-shadow: 10px 10px 10px rgb(111, 236, 236);
+            margin-left: 10px;
+        }
+
+        #output {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Bookmarkx</h1>
+    <div class="container">
+        <h2>Enter your bookmarks</h2>
+        <input type="text" id="name" placeholder="Enter the name">
+        <input type="text" id="url" placeholder="Enter the URL">
+        <button id="add_btn" onclick="">Add</button>
+    </div>
+
+    <div id="output">
+        <!-- Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab excepturi esse aliquid explicabo eligendi molestias
+        impedit saepe illum mollitia, rem reiciendis fuga aliquam sequi ducimus dolorum expedita error quae quam quo
+        quis corporis hic tempora atque accusantium! Possimus quo, amet, totam, enim esse ex eum similique deleniti
+        consequuntur dolorem ab? -->
+    </div>
+
+    <script>
+        let x = document.getElementById("add_btn")
+        x.addEventListener("mousedown", () => {
+            x.style.transform = 'scale(0.8)'
+        }
+        )
+        x.addEventListener("mouseup", () => {
+            x.style.transform = 'scale(1.1)'
+        }
+        )
+        x.addEventListener("mouseleave", () => {
+            x.style.transform = 'scale(1)'
+        }
+        )
+        x.addEventListener("mouseover", () => {
+            x.style.transform = 'scale(1.1)'
+        }
+        )
+
+        let bookmarks = []
+        x.addEventListener('click', () => {
+
+
+            let name_ = document.getElementById('name').value.trim();
+            let url = document.getElementById('url').value.trim();
+            bookmarks.push({ name_, url })
+            console.log(bookmarks);
+            document.getElementById('name').value = '';// doing name_ = '' will make the value 
+            // of the variable name_ = '' not the input field
+            document.getElementById('url').value = '';
+
+        }
+        )
+
+        x.addEventListener('click', () => {
+            let op = document.getElementById('output');
+            op.innerHTML = '';
+
+            let len = bookmarks.length;
+            for (i of bookmarks) {
+                let to_add = document.createElement("div");
+                to_add.className = "op_add";
+                to_add.innerHTML = `
+        🐼 ${i.name_}: ${i.url}
+    `
+                op.appendChild(to_add);
+            }
+
+        }
+        )
+    </script>
+</body>
+
+</html>
