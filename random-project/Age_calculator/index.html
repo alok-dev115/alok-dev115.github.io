@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Age Calculator</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>JavaScript<br>
+            <span>Age Calculator</span>
+        </h1>
+
+        <div class="input-container">
+            <input type="date" placeholder="Date-Month-Year">
+            <button onclick="calculate_age()">Calculate</button>
+        </div>
+        
+        <p hidden = "true" id="age_data">
+            You are <span id="years">30</span> years, <span id="months">4</span> months and <span id="days">17</span> days old
+        </p>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

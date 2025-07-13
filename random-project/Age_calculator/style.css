@@ -1,0 +1,78 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    color: #fff;
+}
+
+.container {
+    background: linear-gradient(135deg, #4203a9, #90bafc);
+    padding-top: 120px;
+    padding-left: 90px;
+    width: 100%;
+    min-height: 100vh;
+}
+
+h1 {
+    font-size: 50px;
+}
+
+h1 span {
+    color: rgb(243, 243, 101);
+}
+
+.input-container {
+    margin: 30px 0;
+    background-color: rgb(255, 255, 255, 0.3);
+    width: 400px;
+    padding: 20px;
+    border-radius: 7px;
+    display: flex;
+
+}
+
+
+
+.input-container input {
+    padding: 12px;
+    margin-right: 10px;
+    border-radius: 7px;
+    border: none;
+    outline: none;
+    flex: 1;
+    position: relative;
+    font-size: 20px;
+
+
+}
+
+.input-container button {
+    border: none;
+    outline: none;
+    padding: 10px;
+    border-radius: 3px;
+    background-color: rgb(214, 239, 72);
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.container p span {
+    color: rgb(234, 234, 59);
+}
+
+.input-container input::-webkit-calender-picker-indicator {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: auto;
+    height: auto;
+    position: absolute;
+    background-position: calc(100% - 10px);
+    background-size: 30px;
+    cursor: pointer;
+}
