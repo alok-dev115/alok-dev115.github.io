@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lost & Found App – System Flow</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .flow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .box {
+      width: 420px;
+      padding: 14px;
+      text-align: center;
+      border-radius: 8px;
+      background: white;
+      border: 2px solid #ccc;
+      font-weight: 600;
+    }
+
+    .user { border-color: #1e88e5; background: #e3f2fd; }
+    .frontend { border-color: #43a047; background: #e8f5e9; }
+    .backend { border-color: #8e24aa; background: #f3e5f5; }
+    .ai { border-color: #fb8c00; background: #fff3e0; }
+    .decision { border-style: dashed; }
+    .final { border-color: #2e7d32; background: #c8e6c9; }
+
+    .arrow {
+      font-size: 24px;
+      color: #555;
+    }
+
+    .row {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .small {
+      width: 260px;
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Lost & Found App – End-to-End Flow</h1>
+
+<div class="flow">
+
+  <!-- User -->
+  <div class="box user">User Logs In (Institute Email)</div>
+  <div class="arrow">↓</div>
+
+  <!-- Frontend -->
+  <div class="box frontend">User Reports LOST / FOUND Item<br>
+    (Details + Time + Image)
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="box frontend">Image Uploaded → URL Stored<br>
+    Report Saved to Firestore (status = open)
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Backend Trigger -->
+  <div class="box backend">Firestore Trigger Activated<br>
+    (New Report Created)
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Rule Filtering -->
+  <div class="box backend decision">
+    Rule-Based Filtering<br>
+    • Same Category?<br>
+    • Nearby Location?<br>
+    • Acceptable Time Gap?
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- AI -->
+  <div class="box ai">AI Matching<br>
+    Image Similarity + Text Similarity
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="box ai">Time Difference Score + Location Score</div>
+  <div class="arrow">↓</div>
+
+  <!-- Confidence -->
+  <div class="box backend decision">
+    Final Confidence Calculation<br>
+    (Weighted Scoring)
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Match -->
+  <div class="box backend">Match Created & Shown to User</div>
+  <div class="arrow">↓</div>
+
+  <!-- Claim -->
+  <div class="box frontend decision">
+    User Clicks “This Is Mine”?
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="box backend">
+    Item Marked as CLAIMED<br>
+    Hold Period = 30 Days
+  </div>
+  <div class="arrow">↓</div>
+
+  <!-- Dispute -->
+  <div class="box backend decision">
+    Any Dispute During 30 Days?
+  </div>
+
+  <div class="row">
+    <div class="box ai small">
+      YES → AI Re-evaluates Claim
+    </div>
+    <div class="box final small">
+      NO → Auto-Finalize Ownership
+    </div>
+  </div>
+
+  <div class="arrow">↓</div>
+
+  <div class="box final">
+    Status = FINALIZED<br>
+    Case Closed 🎉
+  </div>
+
+</div>
+
+<footer>
+  Event-Driven • AI-Assisted • Time-Aware • No Manual Admin
+</footer>
+
+</body>
+</html>
