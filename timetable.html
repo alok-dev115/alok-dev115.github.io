@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semester Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo+Black&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1220;
+    --panel:#101C30;
+    --panel-raised:#16233A;
+    --border:#22314A;
+    --text:#E8EDF4;
+    --text-dim:#8A9BB8;
+    --amber:#FFC94A;
+    --teal:#35C9C1;
+    --red:#FF6B6B;
+    --muted:#64748B;
+    --purple:#B79CFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:radial-gradient(ellipse at top, #101E36 0%, var(--bg) 60%);
+    color:var(--text);
+    font-family:'Space Mono', monospace;
+    min-height:100vh;
+    padding-bottom:80px;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:20px 16px 40px;}
+
+  header{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    padding:18px 4px 14px;border-bottom:2px solid var(--border);
+    margin-bottom:14px;flex-wrap:wrap;gap:10px;
+  }
+  .brand{display:flex;flex-direction:column;gap:2px;}
+  .brand .flap{
+    font-family:'Archivo Black', sans-serif;
+    font-size:clamp(24px,6vw,38px);
+    letter-spacing:1px;color:var(--amber);line-height:1;
+  }
+  .brand .sub{color:var(--text-dim);font-size:12px;letter-spacing:2px;text-transform:uppercase;}
+  .today-chip{text-align:right;}
+  .today-chip .day{font-family:'Archivo Black',sans-serif;font-size:20px;color:var(--teal);}
+  .today-chip .date{font-size:12px;color:var(--text-dim);}
+
+  .settings-bar{
+    display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;
+    background:var(--panel);border:1px solid var(--border);border-radius:6px;
+    padding:14px 16px;margin-bottom:18px;
+  }
+  .settings-field{display:flex;flex-direction:column;gap:5px;}
+  .settings-field label{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;}
+  .settings-field select{
+    background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);
+    padding:8px 10px;font-family:'Space Mono',monospace;font-size:13px;min-width:170px;
+  }
+  .settings-field select:focus{outline:none;border-color:var(--amber);}
+  .settings-note{font-size:10.5px;color:var(--text-dim);flex-basis:100%;}
+  .settings-note.warn{color:var(--amber);}
+
+  .storage-banner{
+    font-size:11px;color:var(--text-dim);background:var(--panel-raised);border:1px solid var(--border);
+    border-radius:4px;padding:8px 12px;margin-bottom:18px;line-height:1.6;
+  }
+  .storage-banner b{color:var(--amber);}
+
+  .tabs{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;}
+  .tab-btn{
+    background:var(--panel);border:1px solid var(--border);color:var(--text-dim);
+    padding:9px 16px;border-radius:3px;font-family:'Space Mono',monospace;font-size:13px;
+    letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .15s;
+  }
+  .tab-btn:hover{border-color:var(--amber);color:var(--text);}
+  .tab-btn.active{background:var(--amber);color:#101C30;border-color:var(--amber);font-weight:700;}
+
+  .view{display:none;}
+  .view.active{display:block;animation:fadein .2s ease;}
+  @keyframes fadein{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+  h2.section-title{
+    font-family:'Archivo Black',sans-serif;font-size:15px;letter-spacing:2px;
+    text-transform:uppercase;color:var(--text-dim);margin:26px 0 12px;
+    display:flex;align-items:center;gap:10px;
+  }
+  h2.section-title::after{content:"";flex:1;height:1px;background:var(--border);}
+
+  .card{
+    background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--border);
+    border-radius:4px;padding:14px 16px;margin-bottom:10px;
+    display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    transition:border-color .2s;
+  }
+  .card.status-attended{border-left-color:var(--teal);}
+  .card.status-absent{border-left-color:var(--red);}
+  .card.status-cancelled{border-left-color:var(--muted);opacity:.6;}
+  .card.status-rescheduled{border-left-color:var(--purple);opacity:.75;}
+  .card.status-extra{border-left-color:var(--amber);}
+  .card.status-free{border-left-color:var(--border);opacity:.5;}
+
+  .card-main{flex:1;min-width:220px;}
+  .card-time{color:var(--amber);font-weight:700;font-size:13px;letter-spacing:1px;}
+  .card-name{
+    font-family:'Archivo Black',sans-serif;font-size:17px;margin:3px 0 4px;line-height:1.25;
+  }
+  .card-code-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:2px;}
+  .code-tag{
+    font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1px;
+    color:var(--bg);background:var(--text-dim);padding:2px 7px;border-radius:3px;
+  }
+  .card-meta{color:var(--text-dim);font-size:11.5px;margin-top:6px;line-height:1.6;}
+  .card-meta b{color:var(--text);}
+  .tag{
+    display:inline-block;font-size:10px;letter-spacing:1px;text-transform:uppercase;
+    padding:2px 7px;border-radius:20px;border:1px solid var(--border);color:var(--text-dim);
+  }
+  .tag.lab{border-color:var(--teal);color:var(--teal);}
+  .tag.lec{border-color:var(--amber);color:var(--amber);}
+  .tag.extra{border-color:var(--amber);color:var(--amber);}
+  .tag.unverified{border-color:var(--red);color:var(--red);}
+
+  .status-note{font-size:11px;margin-top:6px;color:var(--purple);}
+
+  .card-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-end;justify-content:center;min-width:170px;}
+  .status-badge{
+    font-size:10.5px;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:20px;
+    background:var(--panel-raised);color:var(--text-dim);border:1px solid var(--border);
+  }
+  .status-badge.attended{color:var(--teal);border-color:var(--teal);}
+  .status-badge.absent{color:var(--red);border-color:var(--red);}
+  .status-badge.cancelled{color:var(--muted);border-color:var(--muted);}
+  .status-badge.rescheduled{color:var(--purple);border-color:var(--purple);}
+
+  .btn-row{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end;}
+  .mini-btn{
+    font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;
+    padding:5px 8px;border-radius:3px;border:1px solid var(--border);background:transparent;color:var(--text-dim);
+    cursor:pointer;transition:all .12s;
+  }
+  .mini-btn:hover{transform:translateY(-1px);}
+  .mini-btn.attend:hover{border-color:var(--teal);color:var(--teal);}
+  .mini-btn.absent:hover{border-color:var(--red);color:var(--red);}
+  .mini-btn.cancel:hover{border-color:var(--muted);color:var(--muted);}
+  .mini-btn.resched:hover{border-color:var(--purple);color:var(--purple);}
+  .mini-btn.active-attend{background:var(--teal);color:#0B1220;border-color:var(--teal);}
+  .mini-btn.active-absent{background:var(--red);color:#0B1220;border-color:var(--red);}
+  .mini-btn.active-cancel{background:var(--muted);color:#0B1220;border-color:var(--muted);}
+  .mini-btn.active-resched{background:var(--purple);color:#0B1220;border-color:var(--purple);}
+
+  .empty{color:var(--text-dim);font-size:13px;padding:20px;text-align:center;border:1px dashed var(--border);border-radius:6px;}
+
+  .week-day{margin-bottom:22px;}
+  .week-day-label{font-family:'Archivo Black',sans-serif;color:var(--amber);font-size:15px;margin-bottom:8px;letter-spacing:1px;}
+
+  .subj-card{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:16px;margin-bottom:12px;}
+  .subj-top{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;}
+  .subj-code{font-family:'Space Mono',monospace;font-size:11px;color:var(--text-dim);letter-spacing:1px;}
+  .subj-pct{font-family:'Archivo Black',sans-serif;font-size:22px;}
+  .subj-pct.good{color:var(--teal);}
+  .subj-pct.warn{color:var(--amber);}
+  .subj-pct.bad{color:var(--red);}
+  .bar-track{height:8px;background:var(--panel-raised);border-radius:20px;margin:10px 0 8px;overflow:hidden;border:1px solid var(--border);}
+  .bar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--teal),#4ADEDE);}
+  .subj-stats{display:flex;gap:16px;font-size:11.5px;color:var(--text-dim);flex-wrap:wrap;}
+  .subj-stats b{color:var(--text);}
+
+  .fab{
+    position:fixed;bottom:22px;right:22px;background:var(--amber);color:#0B1220;
+    border:none;border-radius:30px;padding:14px 20px;font-family:'Archivo Black',sans-serif;
+    font-size:13px;letter-spacing:1px;cursor:pointer;box-shadow:0 6px 20px rgba(255,201,74,.35);
+    z-index:50;
+  }
+  .fab:hover{transform:translateY(-2px);}
+
+  .modal-overlay{
+    display:none;position:fixed;inset:0;background:rgba(5,10,20,.75);backdrop-filter:blur(3px);
+    z-index:100;align-items:center;justify-content:center;padding:16px;
+  }
+  .modal-overlay.active{display:flex;}
+  .modal{background:var(--panel-raised);border:1px solid var(--border);border-radius:8px;padding:22px;max-width:400px;width:100%;}
+  .modal h3{margin:0 0 14px;font-family:'Archivo Black',sans-serif;color:var(--amber);font-size:16px;letter-spacing:1px;}
+  .field{margin-bottom:12px;}
+  .field label{display:block;font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+  .field input, .field select{
+    width:100%;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text);
+    padding:9px 10px;font-family:'Space Mono',monospace;font-size:13px;
+  }
+  .field input:focus, .field select:focus{outline:none;border-color:var(--amber);}
+  .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
+  .btn{
+    padding:9px 16px;border-radius:4px;font-family:'Space Mono',monospace;font-size:12.5px;
+    letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:1px solid var(--border);
+    background:transparent;color:var(--text-dim);
+  }
+  .btn.primary{background:var(--amber);color:#0B1220;border-color:var(--amber);font-weight:700;}
+  .btn:hover{transform:translateY(-1px);}
+
+  .footnote{color:var(--text-dim);font-size:11px;text-align:center;margin-top:30px;line-height:1.7;}
+  .footnote code{color:var(--amber);}
+
+  @media(max-width:520px){
+    .card{flex-direction:column;}
+    .card-actions{align-items:flex-start;width:100%;}
+    .btn-row{justify-content:flex-start;}
+    .settings-bar{flex-direction:column;align-items:stretch;}
+    .settings-field select{min-width:0;width:100%;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="flap" id="brandLabel">CS31</div>
+      <div class="sub">Class &amp; Attendance Board</div>
+    </div>
+    <div class="today-chip">
+      <div class="day" id="todayDayLabel">—</div>
+      <div class="date" id="todayDateLabel">—</div>
+    </div>
+  </header>
+
+  <div class="settings-bar">
+    <div class="settings-field">
+      <label>Group</label>
+      <select id="groupSelect">
+        <option value="CS31">CS31 — BTech CSE Group 1</option>
+        <option value="CS32">CS32 — BTech CSE Group 2</option>
+        <option value="EC31">EC31 — BTech ECE Group 1</option>
+        <option value="EC32">EC32 — BTech ECE Group 2</option>
+      </select>
+    </div>
+    <div class="settings-field" id="labGroupField">
+      <label>CS353 Lab Batch</label>
+      <select id="labGroupSelect">
+        <option value="LC3A">LC3A (Wednesday)</option>
+        <option value="LC3B">LC3B (Thursday)</option>
+        <option value="LC3C">LC3C (Friday)</option>
+      </select>
+    </div>
+    <div class="settings-note" id="dataConfidenceNote"></div>
+  </div>
+
+  <!-- <div class="storage-banner">
+    Settings and attendance are saved in this browser's <b>local storage</b>. That persists reliably when you open the
+    downloaded file directly in a normal browser tab. If you're viewing this inside a Claude chat preview, open the
+    downloaded <code>.html</code> file itself to be sure your data sticks between visits.
+  </div> -->
+
+  <div class="tabs">
+    <button class="tab-btn active" data-view="today">Today</button>
+    <button class="tab-btn" data-view="week">Full Week</button>
+    <button class="tab-btn" data-view="attendance">Attendance</button>
+  </div>
+
+  <div class="view active" id="view-today">
+    <h2 class="section-title">Today's Schedule</h2>
+    <div id="todayList"></div>
+  </div>
+
+  <div class="view" id="view-week">
+    <div id="weekList"></div>
+  </div>
+
+  <div class="view" id="view-attendance">
+    <h2 class="section-title">Per-Subject Attendance</h2>
+    <div id="attendanceList"></div>
+    <div class="footnote">Counting starts from the day you began using this board — earlier classes aren't included. Attendance is tracked separately per group, so switching groups shows different stats.</div>
+  </div>
+
+  <div class="footnote">
+    Only <code>CS31</code>'s schedule and course names are verified against the sheets you shared. <code>CS32 / EC31 / EC32</code>
+    entries are best-effort reconstructions from merged cells in the source timetable — check them against your official copy.
+    EC-course names and HS301/HS302 weren't in the course list you shared, so they're shown unverified. Edit the
+    <code>TIMETABLE</code> and <code>COURSES</code> objects near the top of the &lt;script&gt; to fix anything.
+  </div>
+</div>
+
+<button class="fab" id="addExtraBtn">+ Extra Class</button>
+
+<div class="modal-overlay" id="reschedModal">
+  <div class="modal">
+    <h3>Reschedule Class</h3>
+    <div class="field"><label>New Date</label><input type="date" id="reschedDate"></div>
+    <div class="field"><label>New Time</label><input type="time" id="reschedTime"></div>
+    <div class="field"><label>Note (optional)</label><input type="text" id="reschedNote" placeholder="e.g. moved due to holiday"></div>
+    <div class="modal-actions">
+      <button class="btn" id="reschedCancel">Cancel</button>
+      <button class="btn primary" id="reschedSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="extraModal">
+  <div class="modal">
+    <h3>Add Extra Class</h3>
+    <div class="field"><label>Subject</label><select id="extraSubjectSelect"></select></div>
+    <div class="field" id="extraCustomNameField" style="display:none;">
+      <label>Subject Name</label>
+      <input type="text" id="extraCustomName" placeholder="e.g. CS399 Special Lecture">
+    </div>
+    <div class="field"><label>Date</label><input type="date" id="extraDate"></div>
+    <div class="field"><label>Time</label><input type="time" id="extraTime"></div>
+    <div class="field"><label>Venue</label><input type="text" id="extraVenue" placeholder="e.g. C05 / CSE Lab 2"></div>
+    <div class="modal-actions">
+      <button class="btn" id="extraCancel">Cancel</button>
+      <button class="btn primary" id="extraSave">Add</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   EDITABLE DATA
+   ================================================================ */
+
+const GROUP_INFO = {
+  CS31: { label: "BTech CSE 3rd Year — Group 1", room: "C05", hsCode: "HS207", verified: true },
+  CS32: { label: "BTech CSE 3rd Year — Group 2", room: "C15", hsCode: "HS301", verified: false },
+  EC31: { label: "BTech ECE 3rd Year — Group 1", room: "C21", hsCode: "HS302", verified: false },
+  EC32: { label: "BTech ECE 3rd Year — Group 2", room: "C21", hsCode: "HS302", verified: false },
+};
+
+// name/instructor only confirmed for CS3xx codes + HS207 (from the sheets you shared).
+// Everything else is marked unverified so it's obvious what to double check.
+const COURSES = {
+  CS301: { name: "Theory of Computation", instructor: "Angshuman Jana · Tutorial: Jyotishree Parhi", verified: true },
+  CS306: { name: "Machine Learning", instructor: "Moumita Roy", verified: true },
+  CS351: { name: "IT Workshop II: Cloud Computing", instructor: "Shubha Brata Nath · TA: Asem Debala Chanu, Simran Preet Kaur, Manas Gogoi", verified: true },
+  CS352: { name: "Computer Networks", instructor: "Ferdous A. Barbhuyia", verified: true },
+  CS353: { name: "Computer Networks Lab", instructor: "Ferdous A. Barbhuyia · TA: Rajdeep Kumar Dutta / Bishal Chhetry / Shivansh Mishra", verified: true },
+  CS360: { name: "Machine Learning Lab", instructor: "Moumita Roy · TA: Manashi Saharia", verified: true },
+  HS207: { name: "Organizational Behaviour", instructor: "", verified: true },
+  SC301: { name: "Course name not on the sheet you shared — edit COURSES.SC301", instructor: "", verified: false },
+  HS301: { name: "HS elective (name not shared)", instructor: "", verified: false },
+  HS302: { name: "HS elective (name not shared)", instructor: "", verified: false },
+  EC301: { name: "EC course (name not shared)", instructor: "", verified: false },
+  EC302: { name: "EC course lab (name not shared)", instructor: "", verified: false },
+  EC351: { name: "EC course (name not shared)", instructor: "", verified: false },
+  EC352: { name: "EC course lab (name not shared)", instructor: "", verified: false },
+  EC370: { name: "EC course (name not shared)", instructor: "", verified: false },
+  EC380: { name: "EC course (name not shared)", instructor: "", verified: false },
+};
+
+// CS353 lab: 3 credits = one 3-hr session/week. LC3A meets Wed, LC3B Thu, LC3C Fri.
+const LAB_DAY = { LC3A: "Wednesday", LC3B: "Thursday", LC3C: "Friday" };
+
+// Per-group weekly timetable.
+const TIMETABLE = {
+  CS31: {
+    Monday: [
+      { time: "09:00-11:55", code: "CS351", venue: "CSE Lab 5", type: "lab" },
+      { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
+      { time: "14:00-14:55", code: "HS207", venue: "C05", type: "lec" },
+      { time: "15:00-15:55", code: "CS301", venue: "C05", type: "lec" },
+      { time: "16:00-16:55", code: "CS306", venue: "C05", type: "lec" },
+    ],
+    Tuesday: [
+      { time: "09:00-11:55", code: "CS360", venue: "CSE Lab 1 & 2", type: "lab" },
+      { time: "12:00-12:55", code: "CS301", venue: "C05", type: "lec", note: "Tutorial" },
+      { time: "14:00-14:55", code: "CS352", venue: "C05", type: "lec" },
+      { time: "15:00-15:55", code: "CS351", venue: "C05", type: "lec" },
+      { time: "16:00-16:55", code: "HS207", venue: "C05", type: "lec" },
+    ],
+    Wednesday: [
+      { time: "09:00-11:55", code: "CS353", venue: "CSE Lab 2", type: "lab", labDay: "Wednesday" },
+      { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
+      { time: "14:00-14:55", code: "CS301", venue: "C05", type: "lec" },
+      { time: "15:00-15:55", code: "CS352", venue: "C05", type: "lec" },
+      { time: "16:00-16:55", code: "CS351", venue: "C05", type: "lec" },
+    ],
+    Thursday: [
+      { time: "09:00-11:55", code: "CS353", venue: "CSE Lab 2", type: "lab", labDay: "Thursday" },
+      { time: "12:00-12:55", code: "CS351", venue: "C05", type: "lec" },
+      { time: "14:00-14:55", code: "CS301", venue: "C05", type: "lec" },
+      { time: "15:00-15:55", code: "CS306", venue: "C05", type: "lec" },
+      { time: "16:00-16:55", code: "HS207", venue: "C05", type: "lec" },
+    ],
+    Friday: [
+      { time: "09:00-11:55", code: "CS353", venue: "CSE Lab 2", type: "lab", labDay: "Friday" },
+      { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
+      { time: "14:00-14:55", code: "CS306", venue: "C05", type: "lec" },
+    ],
+  },
+  CS32: {
+    Monday: [
+      { time: "09:00-11:55", code: "CS360", venue: "CSE Lab 1 & 2", type: "lab" },
+      { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
+      { time: "14:00-14:55", code: "HS301", venue: "C15", type: "lec" },
+      { time: "15:00-15:55", code: "CS352", venue: "C15", type: "lec" },
+      { time: "16:00-16:55", code: "CS351", venue: "C15", type: "lec" },
+    ],
+    Tuesday: [
+      { time: "09:00-11:55", code: "CS351", venue: "CSE Lab 5", type: "lab" },
+      { time: "12:00-12:55", code: "CS301", venue: "C15", type: "lec" },
+      { time: "15:00-15:55", code: "CS306", venue: "C15", type: "lec" },
+      { time: "16:00-16:55", code: "HS301", venue: "C15", type: "lec" },
+    ],
+    Wednesday: [
+      { time: "09:00-11:55", code: "CS353", venue: "CSE Lab 2", type: "lab", labDay: "Wednesday" },
+      { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
+      { time: "14:00-14:55", code: "CS352", venue: "C15", type: "lec" },
+      { time: "15:00-15:55", code: "CS301", venue: "C15", type: "lec" },
+      { time: "16:00-16:55", code: "CS351", venue: "C15", type: "lec" },
+    ],
+    Thursday: [
+      { time: "09:00-11:55", code: "CS353", venue: "CSE Lab 2", type: "lab", labDay: "Thursday" },
+      { time: "12:00-12:55", code: "CS301", venue: "C15", type: "lec" },
+      { time: "14:00-14:55", code: "CS306", venue: "C15", type: "lec" },
+      { time: "15:00-15:55", code: "HS301", venue: "C15", type: "lec" },
+    ],
+    Friday: [
+      { time: "09:00-11:55", code: "CS353", venue: "CSE Lab 2", type: "lab", labDay: "Friday" },
+      { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
+      { time: "15:00-15:55", code: "CS301", venue: "C15", type: "lec" },
+      { time: "16:00-16:55", code: "CS306", venue: "C15", type: "lec" },
+    ],
+  },
+  EC31: {
+    Monday: [
+      { time: "11:00-11:55", code: "EC351", venue: "C21", type: "lec", note: "Tutorial" },
+      { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
+      { time: "14:00-14:55", code: "HS302", venue: "C21", type: "lec" },
+      { time: "15:00-15:55", code: "EC351", venue: "C21", type: "lec" },
+      { time: "16:00-16:55", code: "EC370", venue: "C21", type: "lec" },
+    ],
+    Tuesday: [
+      { time: "09:00-11:55", code: "EC352", venue: "ECE Lab 2", type: "lab" },
+      { time: "12:00-12:55", code: "EC380", venue: "C21", type: "lec", note: "Tutorial" },
+      { time: "14:00-14:55", code: "EC380", venue: "C21", type: "lec" },
+      { time: "15:00-15:55", code: "EC301", venue: "C21", type: "lec" },
+    ],
+    Wednesday: [
+      { time: "09:00-11:55", code: "EC302", venue: "ECE Lab 1", type: "lab" },
+      { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
+      { time: "14:00-14:55", code: "EC351", venue: "C21", type: "lec" },
+      { time: "15:00-15:55", code: "EC370", venue: "C21", type: "lec" },
+      { time: "16:00-16:55", code: "EC380", venue: "C21", type: "lec" },
+    ],
+    Thursday: [
+      { time: "12:00-12:55", code: "EC370", venue: "C21", type: "lec", note: "Tutorial" },
+      { time: "14:00-14:55", code: "EC301", venue: "C21", type: "lec" },
+      { time: "15:00-15:55", code: "HS302", venue: "C21", type: "lec" },
+      { time: "16:00-16:55", code: "EC351", venue: "C21", type: "lec" },
+    ],
+    Friday: [
+      { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
+      { time: "14:00-14:55", code: "EC370", venue: "C21", type: "lec" },
+      { time: "15:00-15:55", code: "EC380", venue: "C21", type: "lec" },
+      { time: "16:00-16:55", code: "EC301", venue: "C21", type: "lec" },
+    ],
+  },
+  EC32: {
+    Monday: [
+      { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
+      { time: "14:00-14:55", code: "HS302", venue: "C21", type: "lec" },
+      { time: "15:00-15:55", code: "EC351", venue: "C21", type: "lec" },
+      { time: "16:00-16:55", code: "EC370", venue: "C21", type: "lec" },
+    ],
+    Tuesday: [
+      { time: "09:00-11:55", code: "EC302", venue: "ECE Lab 1", type: "lab" },
+      { time: "12:00-12:55", code: "EC370", venue: "C21", type: "lec", note: "Tutorial" },
+      { time: "14:00-14:55", code: "EC380", venue: "C21", type: "lec" },
+      { time: "15:00-15:55", code: "EC301", venue: "C21", type: "lec" },
+    ],
+    Wednesday: [
+      { time: "09:00-11:55", code: "EC352", venue: "ECE Lab 2", type: "lab" },
+      { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
+      { time: "14:00-14:55", code: "EC351", venue: "C21", type: "lec" },
+      { time: "15:00-15:55", code: "EC370", venue: "C21", type: "lec" },
+      { time: "16:00-16:55", code: "EC380", venue: "C21", type: "lec" },
+    ],
+    Thursday: [
+      { time: "11:00-11:55", code: "EC351", venue: "C21", type: "lec", note: "Tutorial" },
+      { time: "14:00-14:55", code: "EC301", venue: "C21", type: "lec" },
+      { time: "15:00-15:55", code: "HS302", venue: "C21", type: "lec" },
+      { time: "16:00-16:55", code: "EC351", venue: "C21", type: "lec" },
+    ],
+    Friday: [
+      { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
+      { time: "14:00-14:55", code: "EC370", venue: "C21", type: "lec" },
+      { time: "15:00-15:55", code: "EC380", venue: "C21", type: "lec" },
+      { time: "16:00-16:55", code: "EC301", venue: "C21", type: "lec" },
+    ],
+  },
+};
+
+/* ================================================================
+   STATE (persisted to localStorage)
+   ================================================================ */
+
+const STORAGE_KEY = "semester-board-data-v1";
+let STATE = {
+  group: "CS31",
+  labGroup: "LC3A",
+  byGroup: {
+    CS31: { records: {}, extras: [], resched: [] },
+    CS32: { records: {}, extras: [], resched: [] },
+    EC31: { records: {}, extras: [], resched: [] },
+    EC32: { records: {}, extras: [], resched: [] },
+  },
+};
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      STATE.group = parsed.group || "CS31";
+      STATE.labGroup = parsed.labGroup || "LC3A";
+      Object.keys(STATE.byGroup).forEach(g => {
+        if(parsed.byGroup && parsed.byGroup[g]){
+          STATE.byGroup[g] = {
+            records: parsed.byGroup[g].records || {},
+            extras: parsed.byGroup[g].extras || [],
+            resched: parsed.byGroup[g].resched || [],
+          };
+        }
+      });
+    }
+  }catch(e){
+    console.error("localStorage read failed", e);
+  }
+}
+function saveState(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE)); }
+  catch(e){ console.error("localStorage write failed", e); }
+}
+function currentData(){ return STATE.byGroup[STATE.group]; }
+
+/* ================================================================
+   DATE HELPERS
+   ================================================================ */
+
+const DAY_NAMES = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+function fmtDate(d){ return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
+function niceDate(dateStr){
+  const d = new Date(dateStr + "T00:00:00");
+  return d.toLocaleDateString(undefined, { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+}
+function dayNameFromDate(dateStr){
+  const d = new Date(dateStr + "T00:00:00");
+  return DAY_NAMES[d.getDay()];
+}
+
+/* ================================================================
+   SCHEDULE BUILDING
+   ================================================================ */
+
+function slotId(dateStr, code, time){ return `${dateStr}_${code}_${time}`; }
+function isLabSlot(slot){ return !!slot.labDay; }
+function isLabActiveForUser(slot){
+  return !isLabSlot(slot) || slot.labDay === LAB_DAY[STATE.labGroup];
+}
+
+function getScheduleForDate(dateStr){
+  const dayName = dayNameFromDate(dateStr);
+  const groupTable = TIMETABLE[STATE.group] || {};
+  const data = currentData();
+  const list = [];
+
+  (groupTable[dayName] || []).forEach(slot => {
+    const course = COURSES[slot.code] || { name: slot.code, instructor: "", verified: false };
+    const active = isLabActiveForUser(slot);
+    const id = slotId(dateStr, slot.code, slot.time);
+    list.push({
+      id, date: dateStr, time: slot.time, code: slot.code,
+      name: active ? course.name : "Free — CS353 lab is on your batch's day",
+      instructor: active ? course.instructor : "",
+      venue: active ? slot.venue : "",
+      type: active ? slot.type : "free",
+      note: slot.note || "",
+      verified: active ? course.verified : true,
+      kind: active ? "regular" : "free-lab-day",
+    });
+  });
+
+  data.extras.filter(x => x.date === dateStr).forEach(x => {
+    list.push({
+      id: `extra_${x.id}`, date: x.date, time: x.time, code: x.code, name: x.name,
+      instructor: "", venue: x.venue, type: "extra", note: "Extra class", verified: true, kind: "extra"
+    });
+  });
+
+  data.resched.filter(r => r.toDate === dateStr).forEach(r => {
+    list.push({
+      id: `resched_${r.id}`, date: r.toDate, time: r.toTime, code: r.fromCode, name: r.fromName,
+      instructor: "", venue: "", type: "extra", verified: true,
+      note: `Rescheduled from ${r.fromDateNice || "earlier"}` + (r.note ? ` — ${r.note}` : ""),
+      kind: "rescheduled-in"
+    });
+  });
+
+  list.sort((a,b) => a.time.localeCompare(b.time));
+  return list;
+}
+
+function getStatus(id){
+  const data = currentData();
+  return data.records[id] ? data.records[id].status : null;
+}
+function setStatus(entry, status){
+  const data = currentData();
+  if(status === null){ delete data.records[entry.id]; }
+  else { data.records[entry.id] = { status, code: entry.code, name: entry.name }; }
+  saveState();
+  renderAll();
+}
+
+/* ================================================================
+   RENDER: CARD
+   ================================================================ */
+
+function renderCard(entry, opts={}){
+  const status = getStatus(entry.id);
+  const statusClass = status ? `status-${status}` : (entry.kind === 'free-lab-day' ? 'status-free' : entry.kind !== 'regular' ? 'status-extra' : '');
+  const div = document.createElement('div');
+  div.className = `card ${statusClass}`;
+
+  const typeTag = entry.type === 'lab' ? '<span class="tag lab">LAB</span>'
+                 : entry.type === 'extra' ? '<span class="tag extra">EXTRA</span>'
+                 : entry.type === 'free' ? ''
+                 : '<span class="tag lec">LEC</span>';
+  const unverifiedTag = !entry.verified ? '<span class="tag unverified">UNVERIFIED</span>' : '';
+
+  const actions = entry.kind === 'free-lab-day' ? '' : `
+    <div class="card-actions">
+      <div class="status-badge ${status || ''}">${status ? status.replace('-', ' ') : 'not marked'}</div>
+      <div class="btn-row">
+        <button class="mini-btn attend ${status==='attended'?'active-attend':''}" data-action="attended">✓ Attended</button>
+        <button class="mini-btn absent ${status==='absent'?'active-absent':''}" data-action="absent">✕ Not Attended</button>
+        <button class="mini-btn cancel ${status==='cancelled'?'active-cancel':''}" data-action="cancelled">⊘ Cancelled</button>
+        <button class="mini-btn resched ${status==='rescheduled'?'active-resched':''}" data-action="reschedule">↻ Reschedule</button>
+      </div>
+    </div>`;
+
+  div.innerHTML = `
+    <div class="card-main">
+      <div class="card-time">${entry.time}${entry.date && opts.showDate ? ' · ' + niceDate(entry.date) : ''}</div>
+      <div class="card-name">${entry.name}</div>
+      <div class="card-code-row">
+        ${entry.kind !== 'free-lab-day' ? `<span class="code-tag">${entry.code}</span>` : ''}
+        ${typeTag} ${unverifiedTag}
+      </div>
+      <div class="card-meta">
+        ${entry.venue ? `<b>Venue:</b> ${entry.venue}<br>` : ''}
+        ${entry.instructor ? `<b>Instructor:</b> ${entry.instructor}<br>` : ''}
+        ${entry.note ? (entry.kind === 'rescheduled-in' ? `<span class="status-note">${entry.note}</span>` : entry.note) : ''}
+      </div>
+    </div>
+    ${actions}
+  `;
+
+  if(entry.kind !== 'free-lab-day'){
+    div.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const action = btn.dataset.action;
+        if(action === 'reschedule'){ openReschedModal(entry); return; }
+        const current = getStatus(entry.id);
+        setStatus(entry, current === action ? null : action);
+      });
+    });
+  }
+
+  return div;
+}
+
+/* ================================================================
+   RENDER: VIEWS
+   ================================================================ */
+
+function renderToday(){
+  const container = document.getElementById('todayList');
+  container.innerHTML = '';
+  const dateStr = fmtDate(new Date());
+  const entries = getScheduleForDate(dateStr);
+  if(entries.length === 0){
+    container.innerHTML = '<div class="empty">No classes scheduled today. Enjoy the day off — or add an extra class below.</div>';
+    return;
+  }
+  entries.forEach(e => container.appendChild(renderCard(e)));
+}
+
+function renderWeek(){
+  const container = document.getElementById('weekList');
+  container.innerHTML = '';
+  const groupTable = TIMETABLE[STATE.group] || {};
+  Object.keys(groupTable).forEach(day => {
+    const block = document.createElement('div');
+    block.className = 'week-day';
+    block.innerHTML = `<div class="week-day-label">${day}</div>`;
+    groupTable[day].forEach(slot => {
+      const active = isLabActiveForUser(slot);
+      const course = COURSES[slot.code] || { name: slot.code, instructor: "", verified: false };
+      const entry = {
+        time: slot.time, code: slot.code,
+        name: active ? course.name : "Free — CS353 lab is on your batch's day",
+        instructor: active ? course.instructor : "",
+        venue: active ? slot.venue : "",
+        type: active ? slot.type : "free",
+        note: slot.note || "",
+        verified: active ? course.verified : true,
+        kind: active ? "regular" : "free-lab-day",
+      };
+      block.appendChild(renderCard(entry));
+    });
+    container.appendChild(block);
+  });
+}
+
+function renderAttendance(){
+  const container = document.getElementById('attendanceList');
+  container.innerHTML = '';
+  const data = currentData();
+
+  const tally = {};
+  Object.values(data.records).forEach(r => {
+    if(r.status !== 'attended' && r.status !== 'absent') return;
+    if(!tally[r.code]) tally[r.code] = { attended:0, absent:0, name: r.name };
+    tally[r.code][r.status]++;
+  });
+
+  const codes = Object.keys(tally);
+  if(codes.length === 0){
+    container.innerHTML = '<div class="empty">No attendance marked yet for this group. Mark classes from the Today tab and stats will show up here.</div>';
+    return;
+  }
+
+  codes.sort().forEach(code => {
+    const t = tally[code];
+    const total = t.attended + t.absent;
+    const pct = total ? Math.round((t.attended/total)*100) : 0;
+    const pctClass = pct >= 85 ? 'good' : pct >= 75 ? 'warn' : 'bad';
+    const card = document.createElement('div');
+    card.className = 'subj-card';
+    card.innerHTML = `
+      <div class="subj-top">
+        <div>
+          <div style="font-family:'Archivo Black',sans-serif;font-size:16px;color:var(--text);">${t.name}</div>
+          <div class="subj-code">${code}</div>
+        </div>
+        <div class="subj-pct ${pctClass}">${pct}%</div>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <div class="subj-stats">
+        <span><b>${t.attended}</b> attended</span>
+        <span><b>${t.absent}</b> missed</span>
+        <span><b>${total}</b> total marked</span>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function renderSettingsNote(){
+  const g = GROUP_INFO[STATE.group];
+  const note = document.getElementById('dataConfidenceNote');
+  if(g.verified){
+    note.textContent = "This group's schedule and course names are verified!";
+    note.classList.remove('warn');
+  } else {
+    note.textContent = "Heads up: this group's slots were reconstructed from merged/ambiguous cells and several course names weren't in your course list — double check against your official timetable.";
+    note.classList.add('warn');
+  }
+  document.getElementById('brandLabel').textContent = STATE.group;
+  document.getElementById('labGroupField').style.display = (STATE.group === 'CS31' || STATE.group === 'CS32') ? 'flex' : 'none';
+}
+
+function renderAll(){
+  renderSettingsNote();
+  renderToday();
+  renderWeek();
+  renderAttendance();
+}
+
+/* ================================================================
+   MODALS
+   ================================================================ */
+
+let reschedTargetEntry = null;
+function openReschedModal(entry){
+  reschedTargetEntry = entry;
+  document.getElementById('reschedDate').value = entry.date;
+  document.getElementById('reschedTime').value = entry.time.split('-')[0];
+  document.getElementById('reschedNote').value = '';
+  document.getElementById('reschedModal').classList.add('active');
+}
+document.getElementById('reschedCancel').addEventListener('click', () => {
+  document.getElementById('reschedModal').classList.remove('active');
+});
+document.getElementById('reschedSave').addEventListener('click', () => {
+  const toDate = document.getElementById('reschedDate').value;
+  const toTime = document.getElementById('reschedTime').value;
+  const note = document.getElementById('reschedNote').value.trim();
+  if(!toDate || !toTime){ alert('Please pick a date and time.'); return; }
+
+  const data = currentData();
+  const id = 'r' + Date.now();
+  data.resched.push({
+    id, fromId: reschedTargetEntry.id, fromCode: reschedTargetEntry.code,
+    fromName: reschedTargetEntry.name, fromDateNice: niceDate(reschedTargetEntry.date),
+    toDate, toTime, note
+  });
+  data.records[reschedTargetEntry.id] = { status: 'rescheduled', code: reschedTargetEntry.code, name: reschedTargetEntry.name };
+  saveState();
+  document.getElementById('reschedModal').classList.remove('active');
+  renderAll();
+});
+
+function populateExtraSubjectSelect(){
+  const sel = document.getElementById('extraSubjectSelect');
+  sel.innerHTML = '';
+  Object.keys(COURSES).forEach(code => {
+    const opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = `${code} — ${COURSES[code].name}`;
+    sel.appendChild(opt);
+  });
+  const customOpt = document.createElement('option');
+  customOpt.value = '__custom__';
+  customOpt.textContent = 'Other / custom…';
+  sel.appendChild(customOpt);
+}
+document.getElementById('extraSubjectSelect').addEventListener('change', (e) => {
+  document.getElementById('extraCustomNameField').style.display = e.target.value === '__custom__' ? 'block' : 'none';
+});
+document.getElementById('addExtraBtn').addEventListener('click', () => {
+  populateExtraSubjectSelect();
+  document.getElementById('extraDate').value = fmtDate(new Date());
+  document.getElementById('extraTime').value = '';
+  document.getElementById('extraVenue').value = '';
+  document.getElementById('extraCustomName').value = '';
+  document.getElementById('extraCustomNameField').style.display = 'none';
+  document.getElementById('extraModal').classList.add('active');
+});
+document.getElementById('extraCancel').addEventListener('click', () => {
+  document.getElementById('extraModal').classList.remove('active');
+});
+document.getElementById('extraSave').addEventListener('click', () => {
+  const sel = document.getElementById('extraSubjectSelect').value;
+  const date = document.getElementById('extraDate').value;
+  const time = document.getElementById('extraTime').value;
+  const venue = document.getElementById('extraVenue').value.trim();
+  if(!date || !time){ alert('Please pick a date and time.'); return; }
+
+  let code, name;
+  if(sel === '__custom__'){
+    const custom = document.getElementById('extraCustomName').value.trim();
+    if(!custom){ alert('Please enter a subject name.'); return; }
+    code = custom.split(' ')[0].toUpperCase();
+    name = custom;
+  } else {
+    code = sel;
+    name = COURSES[sel].name;
+  }
+
+  currentData().extras.push({ id: 'e' + Date.now(), date, time, code, name, venue });
+  saveState();
+  document.getElementById('extraModal').classList.remove('active');
+  renderAll();
+});
+
+[document.getElementById('reschedModal'), document.getElementById('extraModal')].forEach(m => {
+  m.addEventListener('click', (e) => { if(e.target === m) m.classList.remove('active'); });
+});
+
+/* ================================================================
+   SETTINGS CONTROLS
+   ================================================================ */
+
+document.getElementById('groupSelect').addEventListener('change', (e) => {
+  STATE.group = e.target.value;
+  saveState();
+  renderAll();
+});
+document.getElementById('labGroupSelect').addEventListener('change', (e) => {
+  STATE.labGroup = e.target.value;
+  saveState();
+  renderAll();
+});
+
+/* ================================================================
+   TABS
+   ================================================================ */
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('view-' + btn.dataset.view).classList.add('active');
+  });
+});
+
+/* ================================================================
+   INIT
+   ================================================================ */
+
+(function init(){
+  const now = new Date();
+  document.getElementById('todayDayLabel').textContent = DAY_NAMES[now.getDay()];
+  document.getElementById('todayDateLabel').textContent = niceDate(fmtDate(now));
+
+  loadState();
+  document.getElementById('groupSelect').value = STATE.group;
+  document.getElementById('labGroupSelect').value = STATE.labGroup;
+
+  renderAll();
+})();
+</script>
+</body>
+</html>
