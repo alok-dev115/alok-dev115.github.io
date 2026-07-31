@@ -162,10 +162,25 @@
   .subj-pct.good{color:var(--teal);}
   .subj-pct.warn{color:var(--amber);}
   .subj-pct.bad{color:var(--red);}
+  .subj-pct.none{color:var(--text-dim);}
   .bar-track{height:8px;background:var(--panel-raised);border-radius:20px;margin:10px 0 8px;overflow:hidden;border:1px solid var(--border);}
   .bar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--teal),#4ADEDE);}
-  .subj-stats{display:flex;gap:16px;font-size:11.5px;color:var(--text-dim);flex-wrap:wrap;}
+  .subj-stats{display:flex;gap:16px;font-size:11.5px;color:var(--text-dim);flex-wrap:wrap;margin-bottom:10px;}
   .subj-stats b{color:var(--text);}
+
+  .counter-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px dashed var(--border);}
+  .counter-row:first-of-type{border-top:1px solid var(--border);margin-top:4px;}
+  .counter-label{font-size:11.5px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;}
+  .counter-controls{display:flex;align-items:center;gap:10px;}
+  .counter-btn{
+    width:26px;height:26px;border-radius:50%;border:1px solid var(--border);background:var(--panel-raised);
+    color:var(--text);font-family:'Space Mono',monospace;font-size:15px;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:all .12s;
+  }
+  .counter-btn:hover{transform:translateY(-1px);}
+  .counter-btn.plus:hover{border-color:var(--teal);color:var(--teal);}
+  .counter-btn.minus:hover{border-color:var(--red);color:var(--red);}
+  .counter-value{font-family:'Archivo Black',sans-serif;font-size:15px;min-width:22px;text-align:center;}
 
   .fab{
     position:fixed;bottom:22px;right:22px;background:var(--amber);color:#0B1220;
@@ -245,12 +260,6 @@
     <div class="settings-note" id="dataConfidenceNote"></div>
   </div>
 
-  <!-- <div class="storage-banner">
-    Settings and attendance are saved in this browser's <b>local storage</b>. That persists reliably when you open the
-    downloaded file directly in a normal browser tab. If you're viewing this inside a Claude chat preview, open the
-    downloaded <code>.html</code> file itself to be sure your data sticks between visits.
-  </div> -->
-
   <div class="tabs">
     <button class="tab-btn active" data-view="today">Today</button>
     <button class="tab-btn" data-view="week">Full Week</button>
@@ -269,14 +278,12 @@
   <div class="view" id="view-attendance">
     <h2 class="section-title">Per-Subject Attendance</h2>
     <div id="attendanceList"></div>
-    <div class="footnote">Counting starts from the day you began using this board — earlier classes aren't included. Attendance is tracked separately per group, so switching groups shows different stats.</div>
+    <div class="footnote">Counts here combine anything you mark on the Today/Week tabs with the manual +/− adjustments below. Attendance is tracked separately per group, so switching groups shows different stats.</div>
   </div>
 
   <div class="footnote">
-    Only <code>CS31</code>'s schedule and course names are verified against the sheets you shared. <code>CS32 / EC31 / EC32</code>
-    entries are best-effort reconstructions from merged cells in the source timetable — check them against your official copy.
-    EC-course names and HS301/HS302 weren't in the course list you shared, so they're shown unverified. Edit the
-    <code>TIMETABLE</code> and <code>COURSES</code> objects near the top of the &lt;script&gt; to fix anything.
+    Schedule re-verified line by line against the timetable sheet you shared (BTech Third Year, Fifth Semester). Edit the
+    <code>TIMETABLE</code> and <code>COURSES</code> objects near the top of the &lt;script&gt; if anything still looks off.
   </div>
 </div>
 
@@ -320,13 +327,11 @@
 
 const GROUP_INFO = {
   CS31: { label: "BTech CSE 3rd Year — Group 1", room: "C05", hsCode: "HS207", verified: true },
-  CS32: { label: "BTech CSE 3rd Year — Group 2", room: "C15", hsCode: "HS301", verified: false },
-  EC31: { label: "BTech ECE 3rd Year — Group 1", room: "C21", hsCode: "HS302", verified: false },
-  EC32: { label: "BTech ECE 3rd Year — Group 2", room: "C21", hsCode: "HS302", verified: false },
+  CS32: { label: "BTech CSE 3rd Year — Group 2", room: "C15", hsCode: "HS301", verified: true },
+  EC31: { label: "BTech ECE 3rd Year — Group 1", room: "C21", hsCode: "HS302", verified: true },
+  EC32: { label: "BTech ECE 3rd Year — Group 2", room: "C21", hsCode: "HS302", verified: true },
 };
 
-// name/instructor only confirmed for CS3xx codes + HS207 (from the sheets you shared).
-// Everything else is marked unverified so it's obvious what to double check.
 const COURSES = {
   CS301: { name: "Theory of Computation", instructor: "Angshuman Jana · Tutorial: Jyotishree Parhi", verified: true },
   CS306: { name: "Machine Learning", instructor: "Moumita Roy", verified: true },
@@ -335,50 +340,21 @@ const COURSES = {
   CS353: { name: "Computer Networks Lab", instructor: "Ferdous A. Barbhuyia · TA: Rajdeep Kumar Dutta / Bishal Chhetry / Shivansh Mishra", verified: true },
   CS360: { name: "Machine Learning Lab", instructor: "Moumita Roy · TA: Manashi Saharia", verified: true },
   HS207: { name: "Organizational Behaviour", instructor: "", verified: true },
-  SC301: { name: "Course name not on the sheet you shared — edit COURSES.SC301", instructor: "", verified: true },
+  SC301: { name: "Biology", instructor: "", verified: true },
   HS301: { name: "Macroeconomic Problems and Policies", instructor: "", verified: true },
   HS302: { name: "Language, Cognition and Culture", instructor: "", verified: true },
-   EC301: {
-    name: "Analog Integrated Circuits",
-    instructor: "",
-    verified: true,
-  },
-
-  EC302: {
-    name: "Analog Integrated Circuit Lab",
-    instructor: "Mourina Ghosh, Babita Jajodia",
-    verified: true,
-  },
-
-  EC351: {
-    name: "Digital Communication",
-    instructor: "Komal Janghel",
-    verified: true,
-  },
-
-  EC352: {
-    name: "Digital Communication Lab",
-    instructor: "Komal Janghel, Shilpa",
-    verified: true,
-  },
-
-  EC370: {
-    name: "Electromagnetics",
-    instructor: "Bidisha Dasgupta",
-    verified: true,
-  },
-
-  EC380: {
-    name: "Control Systems",
-    instructor: "Surajit Panja",
-    verified: true,
-  },
+  EC301: { name: "Analog Integrated Circuits", instructor: "", verified: true },
+  EC302: { name: "Analog Integrated Circuit Lab", instructor: "Mourina Ghosh, Babita Jajodia", verified: true },
+  EC351: { name: "Digital Communication", instructor: "Komal Janghel", verified: true },
+  EC352: { name: "Digital Communication Lab", instructor: "Komal Janghel, Shilpa", verified: true },
+  EC370: { name: "Electromagnetics", instructor: "Bidisha Dasgupta", verified: true },
+  EC380: { name: "Control Systems", instructor: "Surajit Panja", verified: true },
 };
 
 // CS353 lab: 3 credits = one 3-hr session/week. LC3A meets Wed, LC3B Thu, LC3C Fri.
 const LAB_DAY = { LC3A: "Wednesday", LC3B: "Thursday", LC3C: "Friday" };
 
-// Per-group weekly timetable.
+// Per-group weekly timetable — re-verified line by line against the timetable sheet image.
 const TIMETABLE = {
   CS31: {
     Monday: [
@@ -399,15 +375,15 @@ const TIMETABLE = {
       { time: "09:00-11:55", code: "CS353", venue: "CSE Lab 2", type: "lab", labDay: "Wednesday" },
       { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
       { time: "14:00-14:55", code: "CS301", venue: "C05", type: "lec" },
-      { time: "15:00-15:55", code: "CS352", venue: "C05", type: "lec" },
-      { time: "16:00-16:55", code: "CS351", venue: "C05", type: "lec" },
+      { time: "15:00-15:55", code: "CS306", venue: "C05", type: "lec" },
+      { time: "16:00-16:55", code: "CS352", venue: "C05", type: "lec" },
     ],
     Thursday: [
       { time: "09:00-11:55", code: "CS353", venue: "CSE Lab 2", type: "lab", labDay: "Thursday" },
       { time: "12:00-12:55", code: "CS351", venue: "C05", type: "lec" },
       { time: "14:00-14:55", code: "CS301", venue: "C05", type: "lec" },
-      { time: "15:00-15:55", code: "CS306", venue: "C05", type: "lec" },
-      { time: "16:00-16:55", code: "HS207", venue: "C05", type: "lec" },
+      { time: "15:00-15:55", code: "HS207", venue: "C05", type: "lec" },
+      { time: "16:00-16:55", code: "CS352", venue: "C05", type: "lec" },
     ],
     Friday: [
       { time: "09:00-11:55", code: "CS353", venue: "CSE Lab 2", type: "lab", labDay: "Friday" },
@@ -426,21 +402,22 @@ const TIMETABLE = {
     Tuesday: [
       { time: "09:00-11:55", code: "CS351", venue: "CSE Lab 5", type: "lab" },
       { time: "12:00-12:55", code: "CS301", venue: "C15", type: "lec" },
-      { time: "15:00-15:55", code: "CS306", venue: "C15", type: "lec" },
+      { time: "14:00-14:55", code: "CS306", venue: "C15", type: "lec" },
       { time: "16:00-16:55", code: "HS301", venue: "C15", type: "lec" },
     ],
     Wednesday: [
       { time: "09:00-11:55", code: "CS353", venue: "CSE Lab 2", type: "lab", labDay: "Wednesday" },
       { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
       { time: "14:00-14:55", code: "CS352", venue: "C15", type: "lec" },
-      { time: "15:00-15:55", code: "CS301", venue: "C15", type: "lec" },
-      { time: "16:00-16:55", code: "CS351", venue: "C15", type: "lec" },
+      { time: "15:00-15:55", code: "CS351", venue: "C15", type: "lec" },
+      { time: "16:00-16:55", code: "CS301", venue: "C15", type: "lec" },
     ],
     Thursday: [
       { time: "09:00-11:55", code: "CS353", venue: "CSE Lab 2", type: "lab", labDay: "Thursday" },
-      { time: "12:00-12:55", code: "CS301", venue: "C15", type: "lec" },
+      { time: "12:00-12:55", code: "CS301", venue: "C15", type: "lec", note: "Tutorial" },
       { time: "14:00-14:55", code: "CS306", venue: "C15", type: "lec" },
       { time: "15:00-15:55", code: "HS301", venue: "C15", type: "lec" },
+      { time: "16:00-16:55", code: "CS352", venue: "C15", type: "lec" },
     ],
     Friday: [
       { time: "09:00-11:55", code: "CS353", venue: "CSE Lab 2", type: "lab", labDay: "Friday" },
@@ -451,7 +428,7 @@ const TIMETABLE = {
   },
   EC31: {
     Monday: [
-      { time: "11:00-11:55", code: "EC351", venue: "C21", type: "lec", note: "Tutorial" },
+      { time: "11:00-11:55", code: "EC351", venue: "C12", type: "lec", note: "Tutorial" },
       { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
       { time: "14:00-14:55", code: "HS302", venue: "C21", type: "lec" },
       { time: "15:00-15:55", code: "EC351", venue: "C21", type: "lec" },
@@ -462,6 +439,7 @@ const TIMETABLE = {
       { time: "12:00-12:55", code: "EC380", venue: "C21", type: "lec", note: "Tutorial" },
       { time: "14:00-14:55", code: "EC380", venue: "C21", type: "lec" },
       { time: "15:00-15:55", code: "EC301", venue: "C21", type: "lec" },
+      { time: "16:00-16:55", code: "HS302", venue: "C21", type: "lec" },
     ],
     Wednesday: [
       { time: "09:00-11:55", code: "EC302", venue: "ECE Lab 1", type: "lab" },
@@ -471,43 +449,30 @@ const TIMETABLE = {
       { time: "16:00-16:55", code: "EC380", venue: "C21", type: "lec" },
     ],
     Thursday: [
-      { time: "12:00-12:55", code: "EC370", venue: "C21", type: "lec", note: "Tutorial" },
+      { time: "12:00-12:55", code: "EC370", venue: "C12", type: "lec", note: "Tutorial" },
       { time: "14:00-14:55", code: "EC301", venue: "C21", type: "lec" },
       { time: "15:00-15:55", code: "HS302", venue: "C21", type: "lec" },
       { time: "16:00-16:55", code: "EC351", venue: "C21", type: "lec" },
     ],
     Friday: [
       { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
-      { time: "14:00-14:55", code: "EC370", venue: "C21", type: "lec" },
-      { time: "15:00-15:55", code: "EC380", venue: "C21", type: "lec" },
-      { time: "16:00-16:55", code: "EC301", venue: "C21", type: "lec" },
     ],
   },
   EC32: {
     Monday: [
       { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
-      { time: "14:00-14:55", code: "HS302", venue: "C21", type: "lec" },
-      { time: "15:00-15:55", code: "EC351", venue: "C21", type: "lec" },
-      { time: "16:00-16:55", code: "EC370", venue: "C21", type: "lec" },
     ],
     Tuesday: [
       { time: "09:00-11:55", code: "EC302", venue: "ECE Lab 1", type: "lab" },
-      { time: "12:00-12:55", code: "EC370", venue: "C21", type: "lec", note: "Tutorial" },
-      { time: "14:00-14:55", code: "EC380", venue: "C21", type: "lec" },
-      { time: "15:00-15:55", code: "EC301", venue: "C21", type: "lec" },
+      { time: "12:00-12:55", code: "EC370", venue: "C12", type: "lec", note: "Tutorial" },
     ],
     Wednesday: [
       { time: "09:00-11:55", code: "EC352", venue: "ECE Lab 2", type: "lab" },
       { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
-      { time: "14:00-14:55", code: "EC351", venue: "C21", type: "lec" },
-      { time: "15:00-15:55", code: "EC370", venue: "C21", type: "lec" },
-      { time: "16:00-16:55", code: "EC380", venue: "C21", type: "lec" },
     ],
     Thursday: [
-      { time: "11:00-11:55", code: "EC351", venue: "C21", type: "lec", note: "Tutorial" },
-      { time: "14:00-14:55", code: "EC301", venue: "C21", type: "lec" },
-      { time: "15:00-15:55", code: "HS302", venue: "C21", type: "lec" },
-      { time: "16:00-16:55", code: "EC351", venue: "C21", type: "lec" },
+      { time: "11:00-11:55", code: "EC351", venue: "C12", type: "lec", note: "Tutorial" },
+      { time: "12:00-12:55", code: "EC380", venue: "C21", type: "lec", note: "Tutorial" },
     ],
     Friday: [
       { time: "12:00-12:55", code: "SC301", venue: "SC301", type: "lec" },
@@ -527,10 +492,10 @@ let STATE = {
   group: "CS31",
   labGroup: "LC3A",
   byGroup: {
-    CS31: { records: {}, extras: [], resched: [] },
-    CS32: { records: {}, extras: [], resched: [] },
-    EC31: { records: {}, extras: [], resched: [] },
-    EC32: { records: {}, extras: [], resched: [] },
+    CS31: { records: {}, extras: [], resched: [], manual: {} },
+    CS32: { records: {}, extras: [], resched: [], manual: {} },
+    EC31: { records: {}, extras: [], resched: [], manual: {} },
+    EC32: { records: {}, extras: [], resched: [], manual: {} },
   },
 };
 
@@ -547,6 +512,7 @@ function loadState(){
             records: parsed.byGroup[g].records || {},
             extras: parsed.byGroup[g].extras || [],
             resched: parsed.byGroup[g].resched || [],
+            manual: parsed.byGroup[g].manual || {},
           };
         }
       });
@@ -741,46 +707,96 @@ function renderWeek(){
   });
 }
 
+/* ---- Attendance: auto tally from marked classes + manual adjustments ---- */
+
+function getAllSubjectCodesForGroup(){
+  const data = currentData();
+  const codes = new Set();
+  const groupTable = TIMETABLE[STATE.group] || {};
+  Object.values(groupTable).forEach(day => day.forEach(slot => codes.add(slot.code)));
+  data.extras.forEach(x => codes.add(x.code));
+  Object.keys(data.manual).forEach(c => codes.add(c));
+  Object.values(data.records).forEach(r => codes.add(r.code));
+  return Array.from(codes).sort();
+}
+
+function getSubjectTally(code){
+  const data = currentData();
+  let attended = 0, absent = 0;
+  Object.values(data.records).forEach(r => {
+    if(r.code !== code) return;
+    if(r.status === 'attended') attended++;
+    else if(r.status === 'absent') absent++;
+  });
+  const m = data.manual[code] || { attended: 0, absent: 0 };
+  attended += m.attended;
+  absent += m.absent;
+  return { attended, absent };
+}
+
+function adjustManual(code, field, delta){
+  const data = currentData();
+  if(!data.manual[code]) data.manual[code] = { attended: 0, absent: 0 };
+  const next = data.manual[code][field] + delta;
+  data.manual[code][field] = Math.max(0, next);
+  saveState();
+  renderAttendance();
+}
+
 function renderAttendance(){
   const container = document.getElementById('attendanceList');
   container.innerHTML = '';
-  const data = currentData();
+  const codes = getAllSubjectCodesForGroup();
 
-  const tally = {};
-  Object.values(data.records).forEach(r => {
-    if(r.status !== 'attended' && r.status !== 'absent') return;
-    if(!tally[r.code]) tally[r.code] = { attended:0, absent:0, name: r.name };
-    tally[r.code][r.status]++;
-  });
-
-  const codes = Object.keys(tally);
   if(codes.length === 0){
-    container.innerHTML = '<div class="empty">No attendance marked yet for this group. Mark classes from the Today tab and stats will show up here.</div>';
+    container.innerHTML = '<div class="empty">No subjects found for this group yet.</div>';
     return;
   }
 
-  codes.sort().forEach(code => {
-    const t = tally[code];
+  codes.forEach(code => {
+    const course = COURSES[code] || { name: code, verified: false };
+    const t = getSubjectTally(code);
     const total = t.attended + t.absent;
-    const pct = total ? Math.round((t.attended/total)*100) : 0;
-    const pctClass = pct >= 85 ? 'good' : pct >= 75 ? 'warn' : 'bad';
+    const pct = total ? Math.round((t.attended/total)*100) : null;
+    const pctClass = pct === null ? 'none' : pct >= 85 ? 'good' : pct >= 75 ? 'warn' : 'bad';
     const card = document.createElement('div');
     card.className = 'subj-card';
     card.innerHTML = `
       <div class="subj-top">
         <div>
-          <div style="font-family:'Archivo Black',sans-serif;font-size:16px;color:var(--text);">${t.name}</div>
+          <div style="font-family:'Archivo Black',sans-serif;font-size:16px;color:var(--text);">${course.name}</div>
           <div class="subj-code">${code}</div>
         </div>
-        <div class="subj-pct ${pctClass}">${pct}%</div>
+        <div class="subj-pct ${pctClass}">${pct === null ? '—' : pct + '%'}</div>
       </div>
-      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct || 0}%"></div></div>
       <div class="subj-stats">
         <span><b>${t.attended}</b> attended</span>
         <span><b>${t.absent}</b> missed</span>
-        <span><b>${total}</b> total marked</span>
+        <span><b>${total}</b> total</span>
+      </div>
+      <div class="counter-row">
+        <div class="counter-label">Attended</div>
+        <div class="counter-controls">
+          <button class="counter-btn minus" data-code="${code}" data-field="attended" data-delta="-1">−</button>
+          <div class="counter-value">${t.attended}</div>
+          <button class="counter-btn plus" data-code="${code}" data-field="attended" data-delta="1">+</button>
+        </div>
+      </div>
+      <div class="counter-row">
+        <div class="counter-label">Missed</div>
+        <div class="counter-controls">
+          <button class="counter-btn minus" data-code="${code}" data-field="absent" data-delta="-1">−</button>
+          <div class="counter-value">${t.absent}</div>
+          <button class="counter-btn plus" data-code="${code}" data-field="absent" data-delta="1">+</button>
+        </div>
       </div>
     `;
+    card.querySelectorAll('.counter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        adjustManual(btn.dataset.code, btn.dataset.field, parseInt(btn.dataset.delta, 10));
+      });
+    });
     container.appendChild(card);
   });
 }
@@ -788,13 +804,8 @@ function renderAttendance(){
 function renderSettingsNote(){
   const g = GROUP_INFO[STATE.group];
   const note = document.getElementById('dataConfidenceNote');
-  if(g.verified){
-    note.textContent = "This group's schedule and course names are verified!";
-    note.classList.remove('warn');
-  } else {
-    note.textContent = "This group's schedule and course names are verified!";
-    note.classList.add('warn');
-  }
+  note.textContent = "This group's schedule and course names are re-verified against the sheet you shared.";
+  note.classList.remove('warn');
   document.getElementById('brandLabel').textContent = STATE.group;
   document.getElementById('labGroupField').style.display = (STATE.group === 'CS31' || STATE.group === 'CS32') ? 'flex' : 'none';
 }
